@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% from "_macros.html" import badge_status %}
+{% block title %}Buyer hub — KrishiSetu{% endblock %}
+{% block content %}
+<div class="wrap">
+  <div class="page-head">
+    <div><h1>🏨 Buyer Hub</h1><p class="fine">Wholesale sourcing, direct from farms &amp; FPOs</p></div>
+    <a class="btn primary" href="{{ url_for('marketplace', sort='price_asc') }}">Shop wholesale →</a>
+  </div>
+
+  <div class="kpi-row">
+    <div class="card kpi"><span class="kicon">🧾</span><div><div class="kval">{{ agg['n_orders'] }}</div><div class="klab">Orders (30 days)</div></div></div>
+    <div class="card kpi"><span class="kicon">💳</span><div><div class="kval">{{ agg['spend']|inr }}</div><div class="klab">Total spend (30 days)</div></div></div>
+    <div class="card kpi"><span class="kicon">🟢</span><div><div class="kval">{{ agg['saved']|inr }}</div><div class="klab">Saved vs mandi chain</div></div></div>
+    <div class="card kpi"><span class="kicon">⭐</span><div><div class="kval">Direct</div><div class="klab">Traceable farm origin</div></div></div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h3>📊 What you buy most (kg)</h3>
+      {{ top_chart }}
+    </div>
+    <div class="card">
+      <h3>🤝 Request a bulk / contract quote</h3>
+      <form method="post" action="{{ url_for('buyer_quote') }}" class="stack">
+        <label>Crop
+          <select name="crop">{% for c in crops %}<option>{{ c['name'] }}</option>{% endfor %}</select>
+        </label>
+        <label>Quantity (kg/month)<input type="number" name="qty" min="10" value="500"></label>
+        <label>Note <span class="fine">(grade, schedule, packaging…)</span>
+          <input name="note" placeholder="e.g. Grade A, weekly Monday delivery">
+        </label>
+        <button class="btn primary">Send request to FPOs & farmers</button>
+      </form>
+      {% for qt in quotes %}
+      <div class="qrow"><b>{{ qt['crop_name'] }} · {{ '%g'|format(qt['qty_kg']) }} kg</b>
+        <span class="fine">{{ qt['created_at'] }} · {{ qt['status'] }}</span></div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🧾 Recent orders</h3>
+    <div class="card table-card flush">
+      <table>
+        <thead><tr><th>Order</th><th>Date</th><th>Slot</th><th>Total</th><th>Saved</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          {% for o in orders %}
+          <tr>
+            <td><b>#{{ o['id'] }}</b></td><td>{{ o['placed_on'] }}</td><td>{{ o['slot'] }}</td>
+            <td><b>{{ o['total']|inr }}</b></td><td class="green">{{ o['savings']|inr }}</td>
+            <td>{{ badge_status(o['status']) }}</td>
+            <td><a class="btn soft sm" href="{{ url_for('track', oid=o['id']) }}">Track</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

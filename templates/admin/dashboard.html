@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Admin — KrishiSetu{% endblock %}
+{% block content %}
+<div class="wrap">
+  <div class="page-head">
+    <div><h1>🛠️ Platform admin</h1><p class="fine">Live marketplace KPIs, model health & AI pipeline</p></div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="card kpi"><span class="kicon">🧑‍🌾</span><div><div class="kval">{{ kpi['farmers'] }} <span class="fine">+{{ kpi['fpos'] }} FPO</span></div><div class="klab">Sellers onboard</div></div></div>
+    <div class="card kpi"><span class="kicon">🛒</span><div><div class="kval">{{ kpi['consumers'] + kpi['buyers'] }}</div><div class="klab">Buyers ({{ kpi['buyers'] }} bulk)</div></div></div>
+    <div class="card kpi"><span class="kicon">📦</span><div><div class="kval">{{ kpi['orders'] }}</div><div class="klab">{{ kpi['delivered'] }} delivered</div></div></div>
+    <div class="card kpi"><span class="kicon">💰</span><div><div class="kval">{{ kpi['gmv30']|inr }}</div><div class="klab">GMV last 30 days</div></div></div>
+  </div>
+  <div class="kpi-row">
+    <div class="card kpi green"><span class="kicon">🟢</span><div><div class="kval">{{ kpi['save_pct'] }}%</div><div class="klab">Avg consumer saving</div></div></div>
+    <div class="card kpi green"><span class="kicon">🧑‍🌾</span><div><div class="kval">+{{ kpi['premium'] }}%</div><div class="klab">Farmer realisation vs mandi farm-gate</div></div></div>
+    {% if metrics %}
+    <div class="card kpi"><span class="kicon">🎯</span><div><div class="kval">{{ metrics['price_mape'] }}%</div><div class="klab">Price model MAPE</div></div></div>
+    <div class="card kpi"><span class="kicon">📦</span><div><div class="kval">{{ metrics['demand_mape'] }}%</div><div class="klab">Demand model MAPE</div></div></div>
+    {% endif %}
+  </div>
+
+  <div class="two-col">
+    <div class="card"><h3>💹 GMV — last 14 days</h3>{{ gmv_chart }}</div>
+    <div class="card"><h3>🏆 Top crops by volume (kg sold)</h3>{{ top_chart }}</div>
+  </div>
+
+  <div class="card">
+    <h3>🤖 AI forecast board — staples <span class="fine">(14-day recursive forecast, RandomForest)</span></h3>
+    <div class="card table-card flush">
+      <table>
+        <thead><tr><th>Crop</th><th>Demand outlook (7d)</th><th>Forecast mandi price</th><th>Suggested farm-gate price</th><th>Platform retail</th></tr></thead>
+        <tbody>
+          {% for f in fc %}
+          <tr>
+            <td><b>{{ f['name'].split(' (')[0] }}</b></td>
+            <td><span class="badge ol-{{ f['outlook'] }}">{{ f['outlook'] }} {{ '+' if f['pct'] >= 0 else '' }}{{ f['pct'] }}%</span></td>
+            <td>₹{{ '%.1f'|format(f['mandi']) }}</td>
+            <td><b>₹{{ '%.1f'|format(f['sug']) }}</b></td>
+            <td>₹{{ '%.1f'|format(f['sug'] * 1.08) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="fine">Pipeline: <code>ml/generate_data.py</code> → <code>ml/train_models.py</code> (feature engineering, hold-out validation, recursive 14-day forecast) → tables <code>demand_forecast</code>/<code>price_forecast</code> → dashboards &amp; API (<code>/api/forecast/&lt;crop&gt;</code>).</p>
+  </div>
+</div>
+{% endblock %}

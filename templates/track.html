@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% from "_macros.html" import badge_status %}
+{% block title %}Track order #{{ order['id'] }} — KrishiSetu{% endblock %}
+{% block content %}
+<div class="wrap">
+  <a class="crumb" href="{{ url_for('orders') }}">← My orders</a>
+  <div class="page-head">
+    <div><h1>Order #{{ order['id'] }} {{ badge_status(order['status']) }}</h1>
+      <p class="fine">{{ order['buyer_name'] }} · {{ order['address'] }} · slot {{ order['slot'] }}</p></div>
+  </div>
+
+  {% if order['status'] == 'cancelled' %}
+    <div class="card empty">This order was cancelled.</div>
+  {% else %}
+  <div class="card">
+    <div class="timeline">
+      {% for s in steps %}
+      <div class="tl-step {{ 'done' if s.done }} {{ 'current' if s.current }}">
+        <div class="tl-dot">{{ '✓' if s.done else loop.index }}</div>
+        <div class="tl-lab">{{ s.label }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="track-grid">
+    <div class="card">
+      <h3>🚚 Delivery round</h3>
+      {% if dlv %}
+        <div class="facts col">
+          <div><span>Vehicle</span><b>{{ dlv['vehicle'] or 'Awaiting assignment' }}</b></div>
+          <div><span>Slot</span><b>{{ dlv['slot'] }} · {{ dlv['ddate'] }}</b></div>
+          <div><span>Stop status</span><b>{{ dlv['status'] }}</b></div>
+          {% if dlv['vtype'] %}<div><span>Vehicle type</span><b>{{ dlv['vtype'] }}</b></div>{% endif %}
+        </div>
+        {% if cur_stop %}<div class="note">📍 This order is stop #
+          {% set ns = namespace(i=0) %}{% for s in stops if s['status'] != 'delivered' %}{% if s['id'] == cur_stop['id'] %}{{ loop.index }}{% endif %}{% endfor %}
+          on today's optimised route.</div>{% endif %}
+      {% else %}
+        <p class="fine">Not yet assigned to a vehicle — it joins the next optimised round from the hub.</p>
+      {% endif %}
+      {% if map %}<div class="map-wrap {{ 'anim' if cur_stop }}">{{ map|safe }}</div>{% endif %}
+    </div>
+    <div class="card">
+      <h3>🧺 Items</h3>
+      <table>
+        <tbody>
+        {% for it in items %}
+          <tr><td>{{ it['crop_name'] }}</td><td>{{ '%g'|format(it['qty']) }} kg</td><td>{{ it['amount']|inr }}</td></tr>
+        {% endfor %}
+        <tr class="total-row"><td colspan="2"><b>Total (saved {{ order['savings']|inr }})</b></td><td><b>{{ order['total']|inr }}</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

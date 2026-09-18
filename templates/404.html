@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Not found — KrishiSetu{% endblock %}
+{% block content %}
+<div class="wrap narrow center">
+  <div class="card empty" style="padding:60px 30px">
+    <div class="big-emoji">🌾</div>
+    <h1>404 — page not found</h1>
+    <p class="fine">This field lies fallow. Let's get you back to the market.</p>
+    <a class="btn primary" href="{{ url_for('index') }}">← Back home</a>
+  </div>
+</div>
+{% endblock %}

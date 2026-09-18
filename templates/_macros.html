@@ -1,0 +1,38 @@
+{% macro badge_status(s) %}<span class="badge st-{{ s }}">{{ s|replace('_',' ') }}</span>{% endmacro %}
+
+{% macro chip(text, kind='') %}<span class="mchip {{ kind }}">{{ text|safe }}</span>{% endmacro %}
+
+{% macro product_card(item) %}
+<a class="card product" href="{{ url_for('product', lid=item['id']) }}">
+  <div class="pimg cat-{{ item['category']|lower|replace(' ','-') }}">
+    <span class="pemoji">{{ item['emoji'] }}</span>
+    {% if item['organic'] %}<span class="flag organic">Organic</span>{% endif %}
+    {% if item['is_fpo'] %}<span class="flag fpo">FPO</span>{% endif %}
+  </div>
+  <div class="pbody">
+    <div class="ptop">
+      <h3>{{ item['crop_name'] }}</h3>
+      <span class="grade">Grade {{ item['grade'] }}</span>
+    </div>
+    <div class="pfarm">🏡 {{ item['farm_name'] }} · {{ item['village'] }}</div>
+    <div class="pprice">
+      <b>₹{{ '%.1f'|format(item['price']) }}</b><span class="unit">/kg</span>
+      <s class="mandi">₹{{ '%.0f'|format(item['market_price']) }}</s>
+      <span class="save">-{{ item['save_pct'] }}%</span>
+    </div>
+    <div class="pmeta">
+      <span>⭐ {{ item['rating'] }}</span>
+      <span>{{ '%g'|format(item['qty_available']) }} kg left</span>
+      {% if item['min_order'] > 1 %}<span class="bulktag">Bulk min {{ '%g'|format(item['min_order']) }} kg</span>{% endif %}
+    </div>
+  </div>
+</a>
+{% endmacro %}
+
+{% macro kpi(icon, label, value, sub='') %}
+<div class="card kpi">
+  <span class="kicon">{{ icon }}</span>
+  <div><div class="kval">{{ value }}</div><div class="klab">{{ label }}</div>
+  {% if sub %}<div class="ksub">{{ sub }}</div>{% endif %}</div>
+</div>
+{% endmacro %}

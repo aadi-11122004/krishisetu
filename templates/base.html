@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}KrishiSetu — Farm to Fork, Direct{% endblock %}</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap nav">
+    <a class="brand" href="{{ url_for('index') }}"><span class="leaf">🌱</span> <b>KrishiSetu</b><span class="tagline">farm → fork, direct</span></a>
+    <nav class="links">
+      <a href="{{ url_for('marketplace') }}">Marketplace</a>
+      {% if user and user.role == 'farmer' %}
+        <a href="{{ url_for('farmer_dash') }}">Dashboard</a>
+        <a href="{{ url_for('farmer_insights') }}">AI Insights</a>
+        <a href="{{ url_for('farmer_listings') }}">My Listings</a>
+      {% elif user and user.role == 'buyer' %}
+        <a href="{{ url_for('buyer_dash') }}">Buyer Hub</a>
+        <a href="{{ url_for('orders') }}">My Orders</a>
+      {% elif user and user.role == 'consumer' %}
+        <a href="{{ url_for('orders') }}">My Orders</a>
+      {% elif user and user.role == 'logistics' %}
+        <a href="{{ url_for('logistics') }}">Logistics Console</a>
+      {% elif user and user.role == 'admin' %}
+        <a href="{{ url_for('admin') }}">Admin</a>
+        <a href="{{ url_for('logistics') }}">Logistics</a>
+      {% endif %}
+    </nav>
+    <div class="nav-right">
+      {% if user %}
+        {% if user.role in ('consumer', 'buyer') %}
+          <a class="cart" href="{{ url_for('cart') }}">🧺 Cart{% if cart_count %} <span class="pill">{{ cart_count }}</span>{% endif %}</a>
+        {% endif %}
+        <span class="chip">{{ user.name.split(' ')[0] }} · {{ user.role }}</span>
+        <form method="post" action="{{ url_for('logout') }}" class="inline"><button class="btn ghost sm">Logout</button></form>
+      {% else %}
+        <a class="btn ghost sm" href="{{ url_for('login') }}">Login</a>
+        <a class="btn primary sm" href="{{ url_for('register') }}">Join free</a>
+      {% endif %}
+    </div>
+  </div>
+</header>
+
+{% with msgs = get_flashed_messages(with_categories=true) %}
+  {% if msgs %}<div class="wrap toasts">{% for cat, m in msgs %}<div class="toast {{ cat }}">{{ m }}</div>{% endfor %}</div>{% endif %}
+{% endwith %}
+
+<main>{% block content %}{% endblock %}</main>
+
+<footer>
+  <div class="wrap cols">
+    <div>
+      <div class="brand">🌱 <b>KrishiSetu</b></div>
+      <p>Direct digital marketplace connecting farmers &amp; FPOs with consumers and bulk buyers — with AI demand forecasting and optimised rural-to-urban logistics.</p>
+      <p class="fine">Prototype built for Smart India Hackathon · Ministry of Consumer Affairs, Food &amp; Public Distribution · Dept. of Consumer Affairs</p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <a href="{{ url_for('marketplace') }}">Marketplace</a>
+      <a href="{{ url_for('login') }}">Demo logins</a>
+      <a href="{{ url_for('register') }}">Join as farmer</a>
+    </div>
+    <div>
+      <h4>Demo accounts</h4>
+      <span class="fine">password: demo123</span>
+      <span class="fine">ramesh@ks.in — farmer</span>
+      <span class="fine">fpo@ks.in — FPO</span>
+      <span class="fine">consumer@ks.in — consumer</span>
+      <span class="fine">buyer@ks.in — bulk buyer</span>
+      <span class="fine">logistics@ks.in — logistics</span>
+      <span class="fine">admin@ks.in — admin</span>
+    </div>
+  </div>
+</footer>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

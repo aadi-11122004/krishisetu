@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Join — KrishiSetu{% endblock %}
+{% block content %}
+<div class="wrap narrow">
+  <div class="card auth">
+    <h1>Join KrishiSetu 🌱</h1>
+    <p class="fine">Free for farmers, FPOs and consumers. Platform fee only on completed sales.</p>
+    <form method="post" class="stack">
+      <div class="seg">
+        {% for val, lab, icon in [('farmer','Farmer / FPO','🧑‍🌾'), ('consumer','Consumer','🛒'), ('buyer','Bulk buyer','🏨')] %}
+        <label class="seg-item">
+          <input type="radio" name="role" value="{{ val }}" {{ 'checked' if request.form.get('role','consumer') == val }}>
+          <span>{{ icon }} {{ lab }}</span>
+        </label>
+        {% endfor %}
+      </div>
+      <label>Full name
+        <input name="name" required value="{{ request.form.get('name','') }}" placeholder="e.g. Ramesh Patil">
+      </label>
+      <label>Email
+        <input type="email" name="email" required value="{{ request.form.get('email','') }}" placeholder="you@example.in">
+      </label>
+      <label>Password <span class="fine">(min 4 chars)</span>
+        <input type="password" name="password" required>
+      </label>
+      <label>Phone
+        <input name="phone" value="{{ request.form.get('phone','') }}" placeholder="98xxx xxxxx">
+      </label>
+      <label>Village / area <span class="fine">(farmers: your village; buyers: delivery area)</span>
+        <input name="village" value="{{ request.form.get('village','') }}" placeholder="e.g. Baramati, Pune">
+      </label>
+      <label>Address
+        <input name="address" value="{{ request.form.get('address','') }}" placeholder="House / street / city">
+      </label>
+      <button class="btn primary lg">Create account</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

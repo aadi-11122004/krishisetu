@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% from "_macros.html" import product_card, chip %}
+{% block content %}
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow">Digital Marketplace · Agriculture, FoodTech &amp; Rural Development</span>
+      <h1>Farm to fork, <em>without the middlemen.</em></h1>
+      <p class="lede">KrishiSetu connects <b>farmers &amp; FPOs</b> directly with <b>consumers and bulk buyers</b>, adds end-to-end logistics, and uses AI for <b>demand forecasting</b> and <b>route optimisation</b> — so farmers earn more and consumers pay less.</p>
+      <div class="cta-row">
+        <a class="btn primary lg" href="{{ url_for('marketplace') }}">🧺 Shop fresh produce</a>
+        <a class="btn outline lg" href="{{ url_for('register') }}">🧑‍🌾 Sell as farmer / FPO</a>
+      </div>
+      <div class="chips">
+        {{ chip("🚫 Zero commission agents") }} {{ chip("🤖 AI price + demand signals") }}
+        {{ chip("🚚 Optimised rural delivery") }} {{ chip("🔗 FPO aggregation") }}
+      </div>
+    </div>
+    <div class="hero-img">
+      <img src="{{ url_for('static', filename='img/hero.jpg') }}" alt="Farmers with fresh produce delivering directly to city">
+      <div class="hero-float card">
+        <div class="hf-row"><span>🍅 Tomato — farmer gets</span><b>₹25.6/kg <span class="up">▲ vs ₹18 mandi</span></b></div>
+        <div class="hf-row"><span>🧺 Consumer pays</span><b>₹26/kg <span class="down">▼ vs ₹32 retail</span></b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap statstrip">
+  <div class="stat"><b>{{ stats.farmers }}+{{ stats.fpos }}</b><span>Farmers &amp; FPOs onboard</span></div>
+  <div class="stat"><b>{{ stats.listings }}</b><span>Live produce listings</span></div>
+  <div class="stat"><b>{{ stats.delivered }}</b><span>Orders delivered</span></div>
+  <div class="stat green"><b>{{ stats.save_pct }}%</b><span>Avg. consumer saving vs mandi</span></div>
+</section>
+
+<section class="wrap">
+  <h2 class="sec">⚡ Today's AI demand outlook <span class="fine">(trained model · next 14 days forecast)</span></h2>
+  <div class="chip-row">
+    {% for c in chips %}
+      <div class="card aichip">
+        <span class="big">{{ c.emoji }}</span>
+        <div><b>{{ c.name }}</b>
+          <div class="fine">14-day demand forecast</div>
+        </div>
+        <span class="delta {{ 'up' if c.pct >= 0 else 'down' }}">{{ '+' if c.pct >= 0 else '' }}{{ c.pct }}%</span>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="wrap">
+  <h2 class="sec">How KrishiSetu works</h2>
+  <div class="grid3">
+    <div class="card step"><span class="num">1</span><h3>List directly</h3><p>Farmers &amp; FPOs list harvest with grade, quantity and an <b>AI-suggested fair price</b> — no commission agents, no distress sale.</p></div>
+    <div class="card step"><span class="num">2</span><h3>Order direct</h3><p>Consumers order retail baskets; restaurants, messes &amp; retailers buy <b>wholesale with bulk quotes</b> straight from the farm.</p></div>
+    <div class="card step"><span class="num">3</span><h3>Optimised delivery</h3><p>Orders aggregate at collection hubs; AI <b>forecasts demand</b> per crop and the router <b>sequencing engine (NN + 2-opt)</b> plans each vehicle's route.</p></div>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2 class="sec">Fresh from our farms</h2>
+  <div class="grid-products">
+    {% for item in featured %}{{ product_card(item) }}{% endfor %}
+  </div>
+  <div class="center"><a class="btn outline" href="{{ url_for('marketplace') }}">Browse all {{ stats.listings }} listings →</a></div>
+</section>
+
+<section class="wrap impact card">
+  <h2 class="sec">📈 Impact vs the traditional supply chain</h2>
+  <div class="imp-grid">
+    <div class="imp"><b>≈ {{ stats.save_pct }}%</b><span>consumers pay less than mandi-retail prices</span></div>
+    <div class="imp"><b>≈ {{ kpi_premium if kpi_premium else 20 }}%</b><span>higher farmer realisation per kg (no 4–6 intermediary margins)</span></div>
+    <div class="imp"><b>~{{ ((stats.delivered * 14) // 1) }} kg</b><span>of produce moved through optimised routes in this demo</span></div>
+    <div class="imp"><b>14 days</b><span>of AI demand forecast per crop, for harvest &amp; pricing planning</span></div>
+  </div>
+  <p class="fine">Intermediary chain: Farmer → Local agent → Mandi wholesaler → Secondary wholesaler → Retailer → Consumer (each layer adds 8–25% margin). KrishiSetu: Farmer/FPO → Hub → Consumer.</p>
+</section>
+
+<section class="wrap roles">
+  {% for r in [
+    ('🧑‍🌾', 'Farmers & FPOs', 'List produce, get AI price suggestions, see demand forecasts, receive bulk quotes.', 'farmer'),
+    ('🛒', 'Consumers', 'Farm-fresh produce below mandi-linked retail, with farm traceability.', 'consumer'),
+    ('🏨', 'Bulk buyers', 'Wholesale prices, min-order listings, bulk quote requests, spend analytics.', 'buyer'),
+    ('🚚', 'Logistics', 'Route optimisation console, live vehicle rounds, delivery tracking.', 'logistics')] %}
+  <div class="card role">
+    <span class="remoji">{{ r[0] }}</span><h3>{{ r[1] }}</h3><p>{{ r[2] }}</p>
+    <a class="btn outline sm" href="{{ url_for('login') }}">Open demo →</a>
+  </div>
+  {% endfor %}
+</section>
+
+{% endblock %}

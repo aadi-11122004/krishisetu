@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% from "_macros.html" import badge_status %}
+{% block title %}My listings — KrishiSetu{% endblock %}
+{% block content %}
+<div class="wrap">
+  <div class="page-head">
+    <div><h1>My listings</h1><p class="fine">Manage what you sell on KrishiSetu</p></div>
+  </div>
+
+  <div class="card">
+    <h3>+ Add a new listing</h3>
+    <form method="post" action="{{ url_for('farmer_listing_new') }}" class="form-row">
+      <label>Crop
+        <select name="crop_id" required>
+          {% for c in crops %}<option value="{{ c['id'] }}">{{ c['emoji'] }} {{ c['name'] }} <span class="fine">(mandi ₹{{ '%.0f'|format(c['base_price']) }})</span></option>{% endfor %}
+        </select>
+      </label>
+      <label>Quantity (kg)<input type="number" name="qty" min="1" value="100" required></label>
+      <label>Your price ₹/kg<input type="number" name="price" min="1" step="0.5" value="25" required></label>
+      <label>Min. order (kg)<input type="number" name="min_order" min="1" value="1"></label>
+      <label class="chk mid"><input type="checkbox" name="organic"> 🌿 Organic</label>
+      <button class="btn primary">Publish listing</button>
+    </form>
+    <p class="fine">💡 Tip: check <a href="{{ url_for('farmer_insights') }}">AI Insights</a> for the suggested price and demand outlook before publishing.</p>
+  </div>
+
+  <div class="card table-card">
+    <table>
+      <thead><tr><th>Crop</th><th>Price</th><th>Mandi</th><th>Available</th><th>Grade</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        {% for l in listings %}
+        <tr>
+          <td><b>{{ l['emoji'] }} {{ l['crop_name'] }}</b></td>
+          <td><b>{{ l['price']|inr }}</b>/kg</td>
+          <td class="fine">₹{{ '%.0f'|format(l['market_price']) }}</td>
+          <td>{{ '%g'|format(l['qty_available']) }} kg</td>
+          <td>{{ l['grade'] }}{% if l['organic'] %} · 🌿{% endif %}</td>
+          <td>{{ badge_status(l['status']) }}</td>
+          <td>
+            <form method="post" action="{{ url_for('farmer_listing_toggle', lid=l['id']) }}">
+              <button class="btn soft sm">{{ 'Pause' if l['status'] == 'active' else 'Activate' }}</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{
+  "overall": {
+    "price_mae": 3.13,
+    "price_mape": 5.6,
+    "demand_mape": 13.8,
+    "n_crops": 12,
+    "horizon_days": 14
+  },
+  "per_crop": {
+    "Alphonso Mango": {
+      "price_mae": 8.9,
+      "price_mape": 6.5,
+      "demand_mae": 216,
+      "demand_mape": 14.6
+    },
+    "Banana (Elaichi)": {
+      "price_mae": 3.35,
+      "price_mape": 6.2,
+      "demand_mae": 554,
+      "demand_mape": 14.5
+    },
+    "Carrot": {
+      "price_mae": 2.94,
+      "price_mape": 5.6,
+      "demand_mae": 138,
+      "demand_mape": 12.6
+    },
+    "Grapes (Thompson)": {
+      "price_mae": 3.65,
+      "price_mape": 5.1,
+      "demand_mae": 282,
+      "demand_mape": 12.1
+    },
+    "Green Chilli": {
+      "price_mae": 3.88,
+      "price_mape": 4.7,
+      "demand_mae": 136,
+      "demand_mape": 14.3
+    },
+    "Mosambi (Sweet Lime)": {
+      "price_mae": 2.34,
+      "price_mape": 4.7,
+      "demand_mae": 200,
+      "demand_mape": 16.2
+    },
+    "Onion": {
+      "price_mae": 1.52,
+      "price_mape": 5.3,
+      "demand_mae": 717,
+      "demand_mape": 11.3
+    },
+    "Potato": {
+      "price_mae": 2.08,
+      "price_mape": 7.1,
+      "demand_mae": 784,
+      "demand_mape": 13.1
+    },
+    "Rice (Sona Masoori)": {
+      "price_mae": 3.35,
+      "price_mape": 5.2,
+      "demand_mae": 1096,
+      "demand_mape": 15.5
+    },
+    "Spinach": {
+      "price_mae": 1.92,
+      "price_mape": 5.3,
+      "demand_mae": 134,
+      "demand_mape": 13.7
+    },
+    "Tomato": {
+      "price_mae": 2.18,
+      "price_mape": 5.8,
+      "demand_mae": 595,
+      "demand_mape": 12.7
+    },
+    "Wheat": {
+      "price_mae": 1.43,
+      "price_mape": 5.4,
+      "demand_mae": 1104,
+      "demand_mape": 14.6
+    }
+  }
+}
